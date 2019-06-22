@@ -33,5 +33,9 @@
     <string name="restaurant_address">El Quisco</string>
     <string name="Menu">By Your Mood Or Preference</string>
     <string name="category_name">Comida vegetariana</string>
+    <string name="category">By Your Mood Or Especiality</string>
+    <string name="name_food">Comida china</string>
+    <string name="price_food">$180</string>
+    <string name="money_sign">$</string>
 
 </resources>

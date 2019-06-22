@@ -1,5 +1,6 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.retrofit;
 
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.Food;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Menu;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Restaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UpdateUserModel;
@@ -23,6 +24,9 @@ public interface IMyRestaurantAPI {
 
     @GET("menu")
     Observable<Menu> getMenu(@Query("key") String key, @Query("restaurantId") int restaurantId);
+
+    @GET("food")
+    Observable<Food> getFood(@Query("key") String key, @Query("menuId") int menuId);
 
     @POST("user")
     @FormUrlEncoded
