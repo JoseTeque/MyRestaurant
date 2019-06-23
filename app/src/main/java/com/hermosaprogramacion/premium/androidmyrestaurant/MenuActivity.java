@@ -17,6 +17,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyCategoryAdapter;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.SpaceItemDecoration;
+import com.hermosaprogramacion.premium.androidmyrestaurant.database.CartDataSource;
+import com.hermosaprogramacion.premium.androidmyrestaurant.database.CartDatabase;
+import com.hermosaprogramacion.premium.androidmyrestaurant.database.LocalCartDataSource;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.eventBus.MenuItemEvent;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.IMyRestaurantAPI;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.RetrofitClient;
@@ -30,8 +33,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MenuActivity extends AppCompatActivity {
@@ -57,6 +62,8 @@ public class MenuActivity extends AppCompatActivity {
 
     MyCategoryAdapter adapter;
 
+    CartDataSource cartDataSource;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +73,37 @@ public class MenuActivity extends AppCompatActivity {
         init();
 
         initView();
+        
+        countCartByRestaurant();
 
+    }
+
+    private void countCartByRestaurant() {
+        cartDataSource.countItemInCart(Common.currentUser.getUserPhone(), Common.currentRestaurant.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Integer integer) {
+                    badge.setText(String.valueOf(integer));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(MenuActivity.this, "[COUNT CART]" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void init() {
         dialog = new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
         myRestaurantAPI = RetrofitClient.getInstance(Common.API_RESTAURANT_ENDPOINT).create(IMyRestaurantAPI.class);
+        cartDataSource= new LocalCartDataSource(CartDatabase.getInstance(this).cartDao());
     }
 
     private void initView() {
@@ -172,5 +204,9 @@ public class MenuActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        countCartByRestaurant();
+    }
 }

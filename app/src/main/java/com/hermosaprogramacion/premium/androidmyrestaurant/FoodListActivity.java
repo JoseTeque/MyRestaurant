@@ -48,6 +48,8 @@ public class FoodListActivity extends AppCompatActivity {
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     AlertDialog dialog;
 
+    MyFoodListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,8 @@ public class FoodListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         compositeDisposable.clear();
+        if (adapter !=null)
+            adapter.onStop();
         super.onDestroy();
     }
 
@@ -107,7 +111,7 @@ public class FoodListActivity extends AppCompatActivity {
 
                         if (food.isSucces())
                         {
-                            MyFoodListAdapter adapter = new MyFoodListAdapter(this, food.getResult());
+                             adapter = new MyFoodListAdapter(this, food.getResult());
                             recycler_food.setAdapter(adapter);
 
                         }else {
