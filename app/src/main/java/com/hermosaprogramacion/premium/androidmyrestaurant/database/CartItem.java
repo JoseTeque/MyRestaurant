@@ -20,7 +20,7 @@ public class CartItem {
     private String foodImage;
 
     @ColumnInfo(name = "foodPrice")
-    private float foodPrice;
+    private double foodPrice;
 
     @ColumnInfo(name = "foodQuantity")
     private int foodQuantity;
@@ -67,11 +67,11 @@ public class CartItem {
         this.foodImage = foodImage;
     }
 
-    public float getFoodPrice() {
+    public double getFoodPrice() {
         return foodPrice;
     }
 
-    public void setFoodPrice(float foodPrice) {
+    public void setFoodPrice(double foodPrice) {
         this.foodPrice = foodPrice;
     }
 

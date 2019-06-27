@@ -37,5 +37,12 @@
     <string name="name_food">Comida china</string>
     <string name="price_food">$180</string>
     <string name="money_sign">$</string>
+    <string name="money_valor">200.0</string>
+    <string name="txt_size">Size</string>
+    <string name="txt_Addon">Add on</string>
+    <string name="txt_Description">Description</string>
+    <string name="view_cart">VIEW CART</string>
+    <string name="sauce">sauce 01</string>
+    <string name="search">search</string>
 
 </resources>

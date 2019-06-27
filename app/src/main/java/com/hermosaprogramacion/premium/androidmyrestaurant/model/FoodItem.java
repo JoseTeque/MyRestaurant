@@ -13,7 +13,7 @@ public class FoodItem {
 	private boolean isSize;
 
 	@SerializedName("price")
-	private float price;
+	private double price;
 
 	@SerializedName("name")
 	private String name;
@@ -50,7 +50,7 @@ public class FoodItem {
 		this.price = price;
 	}
 
-	public float getPrice(){
+	public double getPrice(){
 		return price;
 	}
 

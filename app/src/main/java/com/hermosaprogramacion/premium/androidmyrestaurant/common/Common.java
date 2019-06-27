@@ -1,7 +1,12 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.common;
 
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.AddonItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.RestaurantItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.User;
+
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
 public class Common {
 
@@ -12,4 +17,5 @@ public class Common {
 
     public static User currentUser;
     public static RestaurantItem currentRestaurant;
+    public static Set<AddonItem> addonList = new HashSet<>();
 }

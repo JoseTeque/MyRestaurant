@@ -1,13 +1,18 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -16,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyCategoryAdapter;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyFoodListAdapter;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.Food;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.eventBus.FoodListEvent;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.IMyRestaurantAPI;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.RetrofitClient;
@@ -31,6 +37,7 @@ import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class FoodListActivity extends AppCompatActivity {
@@ -48,7 +55,7 @@ public class FoodListActivity extends AppCompatActivity {
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     AlertDialog dialog;
 
-    MyFoodListAdapter adapter;
+    MyFoodListAdapter adapter, searchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +85,8 @@ public class FoodListActivity extends AppCompatActivity {
         compositeDisposable.clear();
         if (adapter !=null)
             adapter.onStop();
+        if (searchAdapter !=null)
+            searchAdapter.onStop();
         super.onDestroy();
     }
 
@@ -143,4 +152,80 @@ public class FoodListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater= getMenuInflater();
+        menuInflater.inflate(R.menu.menu_search,menu);
+
+        MenuItem menuItem= menu.findItem(R.id.search);
+
+        SearchManager searchManager=(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView= (SearchView) menuItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        //Event
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                starSearchFood(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                //Restore to original adapter when use close search
+                recycler_food.setAdapter(adapter);
+                return true;
+            }
+        });
+        return true;
+    }
+
+    private void starSearchFood(String query) {
+
+        dialog.show();
+
+        compositeDisposable.add(myRestaurantAPI.getSearch(Common.API_KEY, query)
+           .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(food -> {
+
+                    if (food.isSucces())
+                    {
+                      searchAdapter = new MyFoodListAdapter(this, food.getResult() );
+                      recycler_food.setAdapter(searchAdapter);
+
+                    }else
+                    {
+                        if (food.getMessage().contains("Empty"))
+                        {
+                            recycler_food.setAdapter(null);
+                            Toast.makeText(this, "Not found", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                    dialog.dismiss();
+
+                }, throwable -> {
+                    dialog.dismiss();
+                    Toast.makeText(this, "[SEARCH FOOD]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+
+                })
+        );
+
+    }
+
 }

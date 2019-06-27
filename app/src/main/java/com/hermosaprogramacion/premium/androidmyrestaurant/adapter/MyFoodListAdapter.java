@@ -1,6 +1,7 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hermosaprogramacion.premium.androidmyrestaurant.FoodDetailActivity;
 import com.hermosaprogramacion.premium.androidmyrestaurant.R;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.database.CartDataSource;
@@ -19,7 +21,10 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.database.CartItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.database.LocalCartDataSource;
 import com.hermosaprogramacion.premium.androidmyrestaurant.interfac.IFoodDetailOrCartCliclListener;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FoodItem;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.eventBus.FoodDetailEvent;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -66,8 +71,12 @@ public class MyFoodListAdapter extends RecyclerView.Adapter<MyFoodListAdapter.Vi
 
         holder.setCartClickListener((view, position1, isDetail) -> {
             if (isDetail)
-                Toast.makeText(context, "click Detail", Toast.LENGTH_SHORT).show();
-            else {
+            {
+                context.startActivity(new Intent(context, FoodDetailActivity.class));
+                EventBus.getDefault().postSticky(new FoodDetailEvent(true,foodItemList.get(position1)));
+            }
+            else
+                {
 
                 //create cart
                   CartItem cartItem = new CartItem();
@@ -147,6 +156,4 @@ public class MyFoodListAdapter extends RecyclerView.Adapter<MyFoodListAdapter.Vi
                 cartClickListener.onFoodItemListener(view,getAdapterPosition(),false);
         }
     }
-
-
 }
