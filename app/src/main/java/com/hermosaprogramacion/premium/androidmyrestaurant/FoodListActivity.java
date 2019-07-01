@@ -84,9 +84,9 @@ public class FoodListActivity extends AppCompatActivity {
     protected void onDestroy() {
         compositeDisposable.clear();
         if (adapter !=null)
-            adapter.onStop();
+            adapter.onDestroy();
         if (searchAdapter !=null)
-            searchAdapter.onStop();
+            searchAdapter.onDestroy();
         super.onDestroy();
     }
 

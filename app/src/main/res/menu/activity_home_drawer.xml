@@ -12,6 +12,13 @@
 
     <group>
         <item
+            android:id="@+id/nav_favo"
+            android:icon="@drawable/ic_favorite_gray_24dp"
+            android:title="@string/favo" />
+    </group>
+
+    <group>
+        <item
             android:id="@+id/nav_order_history"
             android:icon="@drawable/ic_history_gray_24dp"
             android:title="@string/order_history" />

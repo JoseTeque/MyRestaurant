@@ -1,14 +1,19 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.retrofit;
 
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Addon;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.Favorite;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteItem;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteOnLyIdModel;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Food;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Menu;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.PostFavorite;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Restaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Size;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UpdateUserModel;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UserModel;
 
 import io.reactivex.Observable;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -30,6 +35,9 @@ public interface IMyRestaurantAPI {
     @GET("food")
     Observable<Food> getFood(@Query("key") String key, @Query("menuId") int menuId);
 
+    @GET("foodById")
+    Observable<Food> getFoodById(@Query("key") String key, @Query("foodId") int foodId);
+
     @GET("searchfood")
     Observable<Food> getSearch(@Query("key") String key, @Query("foodName") String nameFood);
 
@@ -38,6 +46,12 @@ public interface IMyRestaurantAPI {
 
     @GET("addon")
     Observable<Addon> getAddon(@Query("key") String key, @Query("foodId") int foodId);
+
+    @GET("favorite")
+    Observable<Favorite> getFavorite(@Query("key") String key, @Query("fbid") String fbid);
+
+    @GET("favoriteByRestaurant")
+    Observable<FavoriteOnLyIdModel> getFavoriteByRestaurant(@Query("key") String key, @Query("fbid") String fbid, @Query("restaurantId") int restaurantId);
 
     //POST
 
@@ -48,6 +62,24 @@ public interface IMyRestaurantAPI {
                                          @Field("userPhone") String phone,
                                          @Field("userName") String name,
                                          @Field("userAddress") String address);
+
+    @POST("favorite")
+    @FormUrlEncoded
+    Observable<PostFavorite> insertFavorite(@Field("key") String key,
+                                            @Field("fbid") String fbid,
+                                            @Field("foodId") int foodId,
+                                            @Field("restaurantId") int restaurantId,
+                                            @Field("restaurantName") String restaurantName,
+                                            @Field("foodName") String foodName,
+                                            @Field("foodImage") String foodImage,
+                                            @Field("price") double price);
+
+    //DELETE
+    @DELETE("favorite")
+    Observable<Favorite> removeFavorite(@Query("key") String key,
+                                        @Query("fbid") String fbid,
+                                        @Query("foodId") int foodId,
+                                        @Query("restaurantId") int restaurantId);
 
 
 

@@ -30,6 +30,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
@@ -73,9 +75,31 @@ public class MenuActivity extends AppCompatActivity {
         init();
 
         initView();
-        
+
         countCartByRestaurant();
 
+        loadFavoriteByRestaurant();
+
+    }
+
+    private void loadFavoriteByRestaurant() {
+        compositeDisposable.add(myRestaurantAPI.getFavoriteByRestaurant(Common.API_KEY, Common.currentUser.getFbid(), Common.currentRestaurant.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(favoriteOnLyIdModel -> {
+                    if (favoriteOnLyIdModel.isSucces()) {
+                        if (favoriteOnLyIdModel.getResult() != null && favoriteOnLyIdModel.getResult().size() > 0) {
+                            Common.currentFavOfRestaurant = favoriteOnLyIdModel.getResult();
+                        } else {
+                            Common.currentFavOfRestaurant = new ArrayList<>();
+                        }
+                    } else {
+                        Toast.makeText(this, "[GET FAVORITE Result]" + favoriteOnLyIdModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, throwable -> {
+                    Toast.makeText(this, "[GET FAVORITE]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                })
+        );
     }
 
     private void countCartByRestaurant() {
@@ -90,7 +114,7 @@ public class MenuActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(Integer integer) {
-                    badge.setText(String.valueOf(integer));
+                        badge.setText(String.valueOf(integer));
                     }
 
                     @Override
@@ -103,7 +127,7 @@ public class MenuActivity extends AppCompatActivity {
     private void init() {
         dialog = new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
         myRestaurantAPI = RetrofitClient.getInstance(Common.API_RESTAURANT_ENDPOINT).create(IMyRestaurantAPI.class);
-        cartDataSource= new LocalCartDataSource(CartDatabase.getInstance(this).cartDao());
+        cartDataSource = new LocalCartDataSource(CartDatabase.getInstance(this).cartDao());
     }
 
     private void initView() {
@@ -116,21 +140,22 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        GridLayoutManager layoutManager= new GridLayoutManager(this,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                if (adapter != null)
-                {
-                    switch (adapter.getItemViewType(position))
-                    {
-                        case Common.DEFAULT_COLUM_COUNT : return 1;
-                        case Common.FULL_WIDTH_COLUM : return 2;
-                        default: return -1;
+                if (adapter != null) {
+                    switch (adapter.getItemViewType(position)) {
+                        case Common.DEFAULT_COLUM_COUNT:
+                            return 1;
+                        case Common.FULL_WIDTH_COLUM:
+                            return 2;
+                        default:
+                            return -1;
                     }
-                }else
-                  return -1;
+                } else
+                    return -1;
             }
         });
 
@@ -159,11 +184,9 @@ public class MenuActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
-    public void loadMenuByRestaurant(MenuItemEvent event)
-    {
-        if (event.isSucces())
-        {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void loadMenuByRestaurant(MenuItemEvent event) {
+        if (event.isSucces()) {
             Picasso.get().load(event.getRestaurantItem().getImage()).into(img_restaurante);
             toolbar.setTitle(event.getRestaurantItem().getName());
             setSupportActionBar(toolbar);
@@ -177,10 +200,10 @@ public class MenuActivity extends AppCompatActivity {
                     event.getRestaurantItem().getId()).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(menu -> {
-                         adapter = new MyCategoryAdapter(this, menu.getResult());
-                         recycler_category.setAdapter(adapter);
+                        adapter = new MyCategoryAdapter(this, menu.getResult());
+                        recycler_category.setAdapter(adapter);
 
-                    },throwable -> {
+                    }, throwable -> {
                         Toast.makeText(this, "[GET CATEGORY]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     })
 
