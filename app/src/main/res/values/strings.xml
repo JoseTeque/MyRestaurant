@@ -49,5 +49,23 @@
     <string name="txtFood">chicken</string>
     <string name="txtprice">$100</string>
     <string name="txtNameRestaurant">Restaurant A</string>
+    <string name="txt_user_phone">940540453</string>
+    <string name="txt_date">Date</string>
+    <string name="edtx_hint_date">Select Date</string>
+    <string name="txt_Address">Address</string>
+    <string name="btn_new_Address">New Address</string>
+    <string name="txt_Payment">Payment</string>
+    <string name="rdi_cash_delivery">Cash on delivery</string>
+    <string name="rdi_online_payment">Online Payment</string>
+    <string name="btn_procced">Procced</string>
+    <string name="place_older">Place_older</string>
+    <string name="txt_price_total">Total Cost:</string>
+    <string name="txt_price">0</string>
+    <string name="btn_order">Order</string>
+    <string name="cart">Cart</string>
+    <string name="empty_cart">Empty Cart</string>
+    <string name="txt_name_cart_food">Chicken</string>
+    <string name="cartItem">1</string>
+    <string name="txt_extra_price_food">Extra Price($) :  +180</string>
 
 </resources>

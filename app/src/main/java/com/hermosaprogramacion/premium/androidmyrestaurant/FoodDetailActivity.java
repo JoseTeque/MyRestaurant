@@ -119,6 +119,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             cartItem.setFoodAddon(new Gson().toJson(Common.addonList));
             cartItem.setFoodSize(selectedSize);
             cartItem.setFoodExtraPrice(extraPrice);
+            cartItem.setFbid(Common.currentUser.getFbid());
 
             compositeDisposable.add(
                     cartDataSource.inserOrReplaceAll(cartItem)

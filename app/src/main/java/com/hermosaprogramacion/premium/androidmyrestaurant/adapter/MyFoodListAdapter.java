@@ -45,7 +45,7 @@ public class MyFoodListAdapter extends RecyclerView.Adapter<MyFoodListAdapter.Vi
 
     private Context context;
     private List<FoodItem> foodItemList;
-    CompositeDisposable compositeDisposable;
+   private CompositeDisposable compositeDisposable;
     private CartDataSource cartDataSource;
     private IMyRestaurantAPI myRestaurantAPI;
 
@@ -179,6 +179,7 @@ public class MyFoodListAdapter extends RecyclerView.Adapter<MyFoodListAdapter.Vi
                 cartItem.setFoodAddon("NORMAL");
                 cartItem.setFoodSize("NORMAL");
                 cartItem.setFoodExtraPrice(0.0);
+                cartItem.setFbid(Common.currentUser.getFbid());
 
                 compositeDisposable.add(
                         cartDataSource.inserOrReplaceAll(cartItem)

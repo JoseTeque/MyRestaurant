@@ -18,7 +18,7 @@ public interface CartDataSource {
 
     Single<Integer> countItemInCart(String userPhone, int restaurantId);
 
-    Single<CartItem> sumPrice(int foodId,String userPhone, int restaurantId);
+    Single<Long> sumPrice(String userPhone, int restaurantId);
 
     Completable inserOrReplaceAll(CartItem... cartItems);
 

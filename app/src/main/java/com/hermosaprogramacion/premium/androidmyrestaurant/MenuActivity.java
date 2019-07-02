@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,7 +104,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void countCartByRestaurant() {
-        cartDataSource.countItemInCart(Common.currentUser.getUserPhone(), Common.currentRestaurant.getId())
+        cartDataSource.countItemInCart(Common.currentUser.getFbid(), Common.currentRestaurant.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Integer>() {
@@ -136,7 +137,7 @@ public class MenuActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+              startActivity(new Intent(MenuActivity.this,CarListActivity.class));
             }
         });
 
