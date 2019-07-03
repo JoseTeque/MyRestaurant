@@ -1,6 +1,7 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.retrofit;
 
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Addon;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.CreateOrder;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Favorite;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteOnLyIdModel;
@@ -9,6 +10,7 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.model.Menu;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.PostFavorite;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Restaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Size;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.UpdateOrder;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UpdateUserModel;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UserModel;
 
@@ -73,6 +75,26 @@ public interface IMyRestaurantAPI {
                                             @Field("foodName") String foodName,
                                             @Field("foodImage") String foodImage,
                                             @Field("price") double price);
+
+    @POST("createOrder")
+    @FormUrlEncoded
+    Observable<CreateOrder> createOrder(@Field("key") String key,
+                                        @Field("orderFBID") String orderFBID,
+                                        @Field("orderPhone") String orderPhone,
+                                        @Field("orderName") String orderName,
+                                        @Field("orderAddress") String orderAddress,
+                                        @Field("orderDate") String orderDate,
+                                        @Field("restaurantId") int restaurantId,
+                                        @Field("transactionId") String transactionId,
+                                        @Field("cod") boolean cod,
+                                        @Field("totalPrice") double totalPrice,
+                                        @Field("numOfItem") int numOfItem);
+
+    @POST("updateOrder")
+    @FormUrlEncoded
+    Observable<UpdateOrder> updateOrder(@Field("key") String key,
+                                        @Field("orderId") String orderId,
+                                        @Field("orderDetail") String foodId);
 
     //DELETE
     @DELETE("favorite")

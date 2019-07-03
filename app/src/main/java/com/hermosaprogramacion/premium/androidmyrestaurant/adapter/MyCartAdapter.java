@@ -45,7 +45,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.layout_cart,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_cart, parent, false);
         return new ViewHolder(view);
     }
 
@@ -57,7 +57,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         holder.txt_food_price_cart.setText(String.valueOf(cartItemList.get(position).getFoodPrice()));
         holder.txt_quantity.setText(String.valueOf(cartItemList.get(position).getFoodQuantity()));
 
-        Double finalResult= cartItemList.get(position).getFoodPrice() * cartItemList.get(position).getFoodQuantity();
+        Double finalResult = cartItemList.get(position).getFoodPrice() * cartItemList.get(position).getFoodQuantity();
         holder.txt_new_price_cart.setText(String.valueOf(finalResult));
         holder.txt_extra_price_cart.setText(new StringBuilder("Extra Price($): +").append(cartItemList.get(position).getFoodExtraPrice()));
 
@@ -65,69 +65,66 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
 
         holder.setClickListener((view, position1, isDecreace, isDelete) -> {
             //delete item
-            if (!isDelete)
-            {
-                // if not button delete food from cart click
-                if (isDecreace)//if decrease quantity
-                {
-                  if (cartItemList.get(position1).getFoodQuantity() > 1)
-                  {
-                      cartItemList.get(position1).setFoodQuantity(cartItemList.get(position1).getFoodQuantity()-1);
-                  }
-                }
-                else //if increase quantity
-                {
-                    if (cartItemList.get(position1).getFoodQuantity() < 99)
+                if (!isDelete) {
+                    // if not button delete food from cart click
+                    if (isDecreace)//if decrease quantity
                     {
-                        cartItemList.get(position1).setFoodQuantity(cartItemList.get(position1).getFoodQuantity()+1);
+                        if (cartItemList.get(position1).getFoodQuantity() > 1) {
+                            cartItemList.get(position1).setFoodQuantity(cartItemList.get(position1).getFoodQuantity() - 1);
+                        }
+                    } else //if increase quantity
+                    {
+                        if (cartItemList.get(position1).getFoodQuantity() < 99) {
+                            cartItemList.get(position1).setFoodQuantity(cartItemList.get(position1).getFoodQuantity() + 1);
+                        }
                     }
+
+                    //update cart
+                    cartDataSource.updateCart(cartItemList.get(position1))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Integer>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Integer integer) {
+                                    holder.txt_quantity.setText(String.valueOf(cartItemList.get(position1).getFoodQuantity()));
+
+                                    EventBus.getDefault().postSticky(new CalculatePriceEvent());
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(context, "[UPDATE CART]" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                } else {
+                    cartDataSource.deleteCart(cartItemList.get(position))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Integer>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Integer integer) {
+                                        notifyItemRemoved(position1);
+                                        EventBus.getDefault().postSticky(new CalculatePriceEvent());
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Toast.makeText(context, "[DELETE ITEM]" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
-
-                //update cart
-                cartDataSource.updateCart(cartItemList.get(position1))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new SingleObserver<Integer>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onSuccess(Integer integer) {
-                               holder.txt_quantity.setText(String.valueOf(cartItemList.get(position1).getFoodQuantity()));
-
-                                EventBus.getDefault().postSticky(new CalculatePriceEvent());
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Toast.makeText(context, "[UPDATE CART]"+ e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-            else
-                cartDataSource.deleteCart(cartItemList.get(position1))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new SingleObserver<Integer>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onSuccess(Integer integer) {
-                              notifyItemRemoved(position1);
-                              EventBus.getDefault().postSticky(new CalculatePriceEvent());
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Toast.makeText(context, "[DELETE ITEM]"+ e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
         });
+
     }
 
     @Override
@@ -173,7 +170,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
 
             img_decrease.setOnClickListener(this);
             img_delete_food.setOnClickListener(this);
@@ -182,18 +179,13 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-           if (v == img_decrease)
-           {
-               clickListener.onCalcularPriceListener(v,getAdapterPosition(),true,false);
-           }
-           else if (v == img_add)
-           {
-               clickListener.onCalcularPriceListener(v,getAdapterPosition(),false,false);
-           }
-           else if (v == img_delete_food)
-           {
-               clickListener.onCalcularPriceListener(v,getAdapterPosition(),false,true);
-           }
+            if (v == img_decrease) {
+                clickListener.onCalcularPriceListener(v, getAdapterPosition(), true, false);
+            } else if (v == img_add) {
+                clickListener.onCalcularPriceListener(v, getAdapterPosition(), false, false);
+            } else if (v == img_delete_food) {
+                clickListener.onCalcularPriceListener(v, getAdapterPosition(), false, true);
+            }
         }
     }
 }

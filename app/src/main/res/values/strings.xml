@@ -52,7 +52,7 @@
     <string name="txt_user_phone">940540453</string>
     <string name="txt_date">Date</string>
     <string name="edtx_hint_date">Select Date</string>
-    <string name="txt_Address">Address</string>
+    <string name="txt_Address">El quisco ,transversal 4</string>
     <string name="btn_new_Address">New Address</string>
     <string name="txt_Payment">Payment</string>
     <string name="rdi_cash_delivery">Cash on delivery</string>
@@ -67,5 +67,6 @@
     <string name="txt_name_cart_food">Chicken</string>
     <string name="cartItem">1</string>
     <string name="txt_extra_price_food">Extra Price($) :  +180</string>
+    <string name="txt_Address_">Address</string>
 
 </resources>

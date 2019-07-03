@@ -274,8 +274,6 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                     if (isChecked)
                         sizeprice = sizeItem.getExtraPrice();
-                    else
-                        sizeprice = -sizeItem.getExtraPrice();
 
                     calculatePrice();
 
