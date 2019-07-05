@@ -42,4 +42,21 @@ public class Common {
             }
 
     }
+
+    public static String converStatusToString(int orderStatus) {
+
+        switch (orderStatus)
+        {
+            case 0:
+                return "Placed";
+            case 1:
+                return "Shipping";
+            case 2:
+                return "shipped";
+            case -1:
+                return "cancelled";
+                default:
+                    return "cancelled";
+        }
+    }
 }

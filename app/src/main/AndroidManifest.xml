@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CarListActivity"></activity>
+        <activity android:name=".ViewOrderActivity"></activity>
+        <activity android:name=".CarListActivity" />
         <activity android:name=".PlaceOlderActivity" />
         <activity android:name=".FavoriteActivity" />
         <activity android:name=".FoodDetailActivity" />

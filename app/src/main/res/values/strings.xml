@@ -68,5 +68,16 @@
     <string name="cartItem">1</string>
     <string name="txt_extra_price_food">Extra Price($) :  +180</string>
     <string name="txt_Address_">Address</string>
+    <string name="your_order">Your Order</string>
+    <string name="order">History Order</string>
+    <string name="txt_order_number">Order #1234</string>
+    <string name="txt_order_status">Processing</string>
+    <string name="txt_order_phone">123456</string>
+    <string name="txt_order_address">Address</string>
+    <string name="txt_order_cod">COD</string>
+    <string name="Order_on">Order on</string>
+    <string name="txt_date_order">05/10/2019</string>
+    <string name="txt_order_total_price">$180</string>
+    <string name="txt_num_of_item">Num of item 2</string>
 
 </resources>

@@ -169,6 +169,9 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_order_history) {
 
+            startActivity(new Intent(HomeActivity.this, ViewOrderActivity.class));
+            finish();
+
         } else if (id == R.id.nav_update_info) {
 
         }else if (id == R.id.nav_favo) {

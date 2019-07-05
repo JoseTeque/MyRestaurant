@@ -80,5 +80,8 @@ dependencies {
     //Date Calendar
     implementation 'com.wdullaer:materialdatetimepicker:4.2.0'
 
+    //Braintree
+    implementation 'com.braintreepayments.api:drop-in:4.2.0'
+
 
 }
