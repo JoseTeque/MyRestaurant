@@ -79,5 +79,6 @@
     <string name="txt_date_order">05/10/2019</string>
     <string name="txt_order_total_price">$180</string>
     <string name="txt_num_of_item">Num of item 2</string>
+    <string name="title_activity_nearby_restaurant">Map</string>
 
 </resources>

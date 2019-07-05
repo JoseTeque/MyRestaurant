@@ -1,14 +1,13 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.model;
 
 import java.util.List;
-
 import com.google.gson.annotations.SerializedName;
 
 
-public class Restaurant{
+public class NearbyRestaurant{
 
 	@SerializedName("result")
-	private List<RestaurantItem> result;
+	private List<NearbyRestaurantItem> result;
 
 	@SerializedName("succes")
 	private boolean succes;
@@ -16,11 +15,11 @@ public class Restaurant{
 	@SerializedName("message")
 	private String message;
 
-	public void setResult(List<RestaurantItem> result){
+	public void setResult(List<NearbyRestaurantItem> result){
 		this.result = result;
 	}
 
-	public List<RestaurantItem> getResult(){
+	public List<NearbyRestaurantItem> getResult(){
 		return result;
 	}
 
@@ -39,13 +38,4 @@ public class Restaurant{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	@Override
- 	public String toString(){
-		return 
-			"Restaurant{" + 
-			"result = '" + result + '\'' + 
-			",succes = '" + succes + '\'' + 
-			"}";
-		}
 }

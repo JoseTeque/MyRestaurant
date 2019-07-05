@@ -18,6 +18,7 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.R;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.interfac.ClickListener;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteItem;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.Restaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.RestaurantItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.eventBus.FoodDetailEvent;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.IMyRestaurantAPI;
@@ -33,6 +34,7 @@ import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.ViewHolder> {
@@ -46,15 +48,15 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.Vi
     public MyFavoriteAdapter(Context context, List<FavoriteItem> favoriteItemList) {
         this.context = context;
         this.favoriteItemList = favoriteItemList;
-        compositeDisposable= new CompositeDisposable();
-        iMyRestaurantAPI= RetrofitClient.getInstance(Common.API_RESTAURANT_ENDPOINT).create(IMyRestaurantAPI.class);
+        compositeDisposable = new CompositeDisposable();
+        iMyRestaurantAPI = RetrofitClient.getInstance(Common.API_RESTAURANT_ENDPOINT).create(IMyRestaurantAPI.class);
         dialog = new SpotsDialog.Builder().setContext(context).setCancelable(false).build();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.layout_favorite,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_favorite, parent, false);
         return new ViewHolder(view);
     }
 
@@ -74,26 +76,40 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.Vi
 
             dialog.show();
             compositeDisposable.add(iMyRestaurantAPI.getFoodById(Common.API_KEY, favoriteItemList.get(position1).getFoodId())
-            .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(food -> {
-                        if (food.isSucces())
-                        {
-                          context.startActivity(new Intent(context, FoodDetailActivity.class));
+                        if (food.isSucces()) {
+                            context.startActivity(new Intent(context, FoodDetailActivity.class));
 
-                          if (Common.currentRestaurant == null)
-                              Common.currentRestaurant = new RestaurantItem();
+                            if (Common.currentRestaurant == null) {
+                                compositeDisposable.add(iMyRestaurantAPI.getRestaurantById(Common.API_KEY, String.valueOf(favoriteItemList.get(position).getRestaurantId()))
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(restaurant -> {
 
-                          Common.currentRestaurant.setId(favoriteItemList.get(position1).getRestaurantId());
-                          Common.currentRestaurant.setName(favoriteItemList.get(position1).getRestaurantName());
-                            EventBus.getDefault().postSticky(new FoodDetailEvent(true, food.getResult().get(0)));
-                        }
-                        else
-                        {
+                                            if (restaurant.isSucces()) {
+                                                Common.currentRestaurant = restaurant.getResult().get(0);
+                                                EventBus.getDefault().postSticky(new FoodDetailEvent(true, food.getResult().get(0)));
+                                            } else {
+                                                Toast.makeText(context, "" + restaurant.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }, throwable -> {
+
+                                            Toast.makeText(context, "[GET RESTAURANT BY ID]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                        }));
+                            }
+                            else
+                            {
+                                EventBus.getDefault().postSticky(new FoodDetailEvent(true, food.getResult().get(0)));
+                            }
+                        } else {
                             Toast.makeText(context, "[LOAD FOOD FAVORITE RESULT]" + food.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         dialog.dismiss();
-                    },throwable -> {
+                    }, throwable -> {
                         dialog.dismiss();
                         Toast.makeText(context, "[LOAD FOOD FAVORITE]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     })
@@ -136,12 +152,11 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            clistener.listener(v,getAdapterPosition());
+            clistener.listener(v, getAdapterPosition());
         }
     }
 
-    public void onDestroy()
-    {
+    public void onDestroy() {
         compositeDisposable.clear();
     }
 }

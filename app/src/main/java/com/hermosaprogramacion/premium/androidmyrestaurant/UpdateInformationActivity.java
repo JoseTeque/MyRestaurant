@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -131,6 +132,11 @@ public class UpdateInformationActivity extends AppCompatActivity {
                 }
             });
         });
+
+        if (Common.currentUser != null && !TextUtils.isEmpty(Common.currentUser.getName()))
+            edtxName.setText(Common.currentUser.getName());
+        if (Common.currentUser != null && !TextUtils.isEmpty(Common.currentUser.getAddress()))
+            edtxAddress.setText(Common.currentUser.getAddress());
     }
 
     private void init() {

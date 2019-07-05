@@ -7,6 +7,7 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteOnLyIdModel;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Food;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Menu;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.NearbyRestaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Order;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.PostFavorite;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Restaurant;
@@ -31,6 +32,13 @@ public interface IMyRestaurantAPI {
 
     @GET("restaurant")
     Observable<Restaurant> getRestaurant(@Query("key") String key);
+
+    @GET("restaurantById")
+    Observable<Restaurant> getRestaurantById(@Query("key") String key, @Query("restaurantId") String restaurantId);
+
+
+    @GET("nearbyrestaurant")
+    Observable<NearbyRestaurant> getNearbyrestaurant(@Query("key") String key, @Query("lat") Double lat, @Query("lng") Double lng, @Query("distance") int distance);
 
     @GET("menu")
     Observable<Menu> getMenu(@Query("key") String key, @Query("restaurantId") int restaurantId);
