@@ -14,10 +14,15 @@ import android.widget.Toast;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyOrderAdapter;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.database.CartDataSource;
+import com.hermosaprogramacion.premium.androidmyrestaurant.interfac.ILoadMore;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.OrderItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.IMyRestaurantAPI;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.RetrofitClient;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ViewOrderActivity extends AppCompatActivity {
+public class ViewOrderActivity extends AppCompatActivity implements ILoadMore {
 
     @BindView(R.id.recycler_order)
     RecyclerView recycler_order;
@@ -38,6 +43,11 @@ public class ViewOrderActivity extends AppCompatActivity {
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     AlertDialog dialog;
 
+    MyOrderAdapter myOrderAdapter;
+    List<OrderItem> orderItemList;
+
+    int maxData = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,13 +56,42 @@ public class ViewOrderActivity extends AppCompatActivity {
         init();
         initView();
 
-        getAllOrders();
+       // getAllOrders();
+
+        getMaxOrder();
     }
 
-    private void getAllOrders() {
+    private void getMaxOrder() {
+        dialog.show();
+
+        compositeDisposable.add(myRestaurantAPI.getMaxOrder(Common.API_KEY, Common.currentUser.getFbid())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(maxOrder -> {
+
+                    if (maxOrder.isSucces())
+                    {
+                       maxData = maxOrder.getResult().get(0).getMaxRowNum();
+                        dialog.dismiss();
+                        getAllOrders(0,10);
+                    }
+                    else
+                    {
+                        Toast.makeText(this, " " + maxOrder.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    dialog.dismiss();
+
+                },throwable -> {
+                    dialog.dismiss();
+                    Toast.makeText(this, "[GET ORDER]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                })
+        );
+    }
+
+    private void getAllOrders(int from, int to) {
     dialog.show();
 
-    compositeDisposable.add(myRestaurantAPI.getOrder(Common.API_KEY, Common.currentUser.getFbid())
+    compositeDisposable.add(myRestaurantAPI.getOrder(Common.API_KEY, Common.currentUser.getFbid(),from,to)
     .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(order -> {
@@ -61,8 +100,21 @@ public class ViewOrderActivity extends AppCompatActivity {
                 {
                     if (order.getResult().size() > 0)
                     {
-                        MyOrderAdapter myOrderAdapter= new MyOrderAdapter(this, order.getResult());
-                        recycler_order.setAdapter(myOrderAdapter);
+                        if (myOrderAdapter == null)
+                        {
+                            orderItemList = new ArrayList<>();
+                            orderItemList = order.getResult();
+                            myOrderAdapter= new MyOrderAdapter(this, orderItemList, recycler_order);
+                            myOrderAdapter.setiLoadMore(this);
+                            recycler_order.setAdapter(myOrderAdapter);
+                        }
+                        else
+                        {
+                            orderItemList.remove(orderItemList.size()-1);
+                            orderItemList = order.getResult();
+                            myOrderAdapter.addItem(orderItemList);
+                        }
+
                     }
                     else
                     {
@@ -122,5 +174,22 @@ public class ViewOrderActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLoadMore() {
+        if (myOrderAdapter.getItemCount() < maxData)
+        {
+            orderItemList.add(null);
+            myOrderAdapter.notifyItemInserted(orderItemList.size()-1);
+
+            getAllOrders(myOrderAdapter.getItemCount() + 1, myOrderAdapter.getItemCount() + 10 );
+            myOrderAdapter.notifyDataSetChanged();
+            myOrderAdapter.setLoaded();
+        }
+        else
+        {
+            Toast.makeText(this, "Max data to load..", Toast.LENGTH_SHORT).show();
+        }
     }
 }

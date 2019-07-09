@@ -4,14 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hermosaprogramacion.premium.androidmyrestaurant.R;
+import com.hermosaprogramacion.premium.androidmyrestaurant.ViewOrderActivity;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.interfac.ClickListener;
+import com.hermosaprogramacion.premium.androidmyrestaurant.interfac.ILoadMore;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.OrderItem;
 
 import java.text.SimpleDateFormat;
@@ -20,44 +25,113 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHolder> {
+public class MyOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int VIEW_TIPE_LOADING = 0;
+    private static final int VIEW_TIPE_ITEM = 1;
     private Context context;
     private List<OrderItem> orderItemList;
     private SimpleDateFormat simpleDateFormat;
 
-    public MyOrderAdapter(Context context, List<OrderItem> orderItemList) {
+    private RecyclerView recyclerView;
+
+    ILoadMore iLoadMore;
+
+    boolean isloading = false;
+
+    int totalItemCount= 0, lastVisibleItem = 0, visibleThresHolds = 10;
+
+    public MyOrderAdapter(Context context, List<OrderItem> orderItemList, RecyclerView recyclerView) {
         this.context = context;
         this.orderItemList = orderItemList;
+        this.recyclerView = recyclerView;
         simpleDateFormat= new SimpleDateFormat("MM/dd/yyyy");
+
+        //init
+        LinearLayoutManager linearLayout = (LinearLayoutManager)recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                totalItemCount = linearLayout.getItemCount();
+                lastVisibleItem = linearLayout.findLastVisibleItemPosition();
+                if (!isloading && totalItemCount <= lastVisibleItem + visibleThresHolds)
+                {
+                    if (iLoadMore != null)
+                        iLoadMore.onLoadMore();
+                    isloading = true;
+
+                }
+            }
+        });
+    }
+
+    public void setLoaded(){isloading=false;}
+
+    public void addItem(List<OrderItem> list)
+    {
+        int startInsertedIndex = orderItemList.size();
+        orderItemList.addAll(list);
+        notifyItemInserted(startInsertedIndex);
+    }
+
+    public void setiLoadMore(ILoadMore iLoadMore) {
+        this.iLoadMore = iLoadMore;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (orderItemList.get(position) == null) //IF WE SEET "NULL" VALUE IN LIST, WE WILL UNDERSTAD THIS IS LOADING STATE
+            return VIEW_TIPE_LOADING;
+        else
+            return VIEW_TIPE_ITEM;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.layout_order,parent,false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View itemView;
+        if (viewType == VIEW_TIPE_ITEM)
+        {
+            itemView =  LayoutInflater.from(context).inflate(R.layout.layout_order,parent,false);
+            return new ViewHolder(itemView);
+        }
+        else
+        {
+            itemView =  LayoutInflater.from(context).inflate(R.layout.layout_loadingholder_item,parent,false);
+            return new MyLoadingHolder(itemView);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        OrderItem orderItem= orderItemList.get(position);
+        if (holder instanceof ViewHolder)
+        {
+            ViewHolder viewHolder = (ViewHolder)holder;
 
-        holder.txt_order_Address.setText(orderItem.getOrderAddress());
-        holder.txt_order_phone.setText(orderItem.getOrderPhone());
-        holder.txt_order_status.setText(Common.converStatusToString(orderItem.getOrderStatus()));
-        holder.txt_num_of_item.setText(new StringBuilder("Num of item: ").append(orderItem.getNumOfItem()));
-        holder.txt_order_total_price.setText(new StringBuilder("$").append(orderItem.getTotalPRice()));
-        holder.txt_order_number.setText(new StringBuilder("Num of orden: ").append(orderItem.getOrderId()));
-        holder.txt_order_date.setText(new StringBuilder(simpleDateFormat.format(orderItem.getOrderDate())));
+            OrderItem orderItem= orderItemList.get(position);
 
-        if (orderItem.isCod())
-            holder.txt_order_cod.setText(new StringBuilder("Cash on delivery"));
-        else
-            holder.txt_order_cod.setText(new StringBuilder("TransId: ").append(orderItem.getTransactionId()));
+            viewHolder.txt_order_Address.setText(orderItem.getOrderAddress());
+            viewHolder.txt_order_phone.setText(orderItem.getOrderPhone());
+            viewHolder.txt_order_status.setText(Common.converStatusToString(orderItem.getOrderStatus()));
+            viewHolder.txt_num_of_item.setText(new StringBuilder("Num of item: ").append(orderItem.getNumOfItem()));
+            viewHolder.txt_order_total_price.setText(new StringBuilder("$").append(orderItem.getTotalPRice()));
+            viewHolder.txt_order_number.setText(new StringBuilder("Num of orden: ").append(orderItem.getOrderId()));
+            viewHolder.txt_order_date.setText(new StringBuilder(simpleDateFormat.format(orderItem.getOrderDate())));
 
+            if (orderItem.isCod())
+                viewHolder.txt_order_cod.setText(new StringBuilder("Cash on delivery"));
+            else
+                viewHolder.txt_order_cod.setText(new StringBuilder("TransId: ").append(orderItem.getTransactionId()));
+        }
+        else if (holder instanceof MyLoadingHolder)
+        {
+            MyLoadingHolder myLoadingHolder = (MyLoadingHolder)holder;
 
+            myLoadingHolder.progressBAR.setIndeterminate(true);
+        }
     }
 
     @Override
@@ -108,6 +182,20 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         @Override
         public void onClick(View v) {
             clickListener.listener(v,getAdapterPosition());
+        }
+    }
+
+    public class MyLoadingHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.progressBAR)
+        ProgressBar progressBAR;
+
+
+        public MyLoadingHolder(@NonNull View itemView) {
+            super(itemView);
+
+            ButterKnife.bind(this, itemView);
+
         }
     }
 }

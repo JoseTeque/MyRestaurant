@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyAddonAdapter;
@@ -69,7 +71,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     TextView txt_description;
 
     @BindView(R.id.img_categoriaDE)
-    ImageView img_categoria;
+    KenBurnsView img_categoria;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -135,6 +137,12 @@ public class FoodDetailActivity extends AppCompatActivity {
                             })
             );
 
+        });
+
+        btn_view_cart.setOnClickListener(v -> {
+
+            startActivity(new Intent(FoodDetailActivity.this, CarListActivity.class));
+            finish();
         });
     }
 
@@ -274,9 +282,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
                     if (isChecked)
                         sizeprice = sizeItem.getExtraPrice();
-
                     calculatePrice();
-
                     selectedSize = sizeItem.getDescription();
 
                 });
@@ -294,14 +300,12 @@ public class FoodDetailActivity extends AppCompatActivity {
     private void calculatePrice() {
 
          extraPrice = 0.0;
-        double newPrice ;
+         double newPrice ;
 
         extraPrice  += sizeprice;
         extraPrice  += addonPrice;
 
-            newPrice = originalPrice += extraPrice;
-
-        txt_money.setText("");
+            newPrice = originalPrice + extraPrice;
 
         txt_money.setText(String.valueOf(newPrice));
 

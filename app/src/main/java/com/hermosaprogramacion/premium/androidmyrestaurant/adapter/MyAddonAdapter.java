@@ -44,7 +44,7 @@ public class MyAddonAdapter extends RecyclerView.Adapter<MyAddonAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.chb_addon.setText(new StringBuilder(addonItemList.get(position).getName())
-        .append(" +(" + context.getString(R.string.money_valor))
+        .append(" +(" + context.getString(R.string.money_sign))
                 .append(addonItemList.get(position).getExtraPrice())
                 .append(")"));
 

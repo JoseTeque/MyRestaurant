@@ -10,10 +10,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyCategoryAdapter;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
@@ -45,7 +48,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MenuActivity extends AppCompatActivity {
 
     @BindView(R.id.img_restaurante)
-    ImageView img_restaurante;
+    KenBurnsView img_restaurante;
 
     @BindView(R.id.recycler_category)
     RecyclerView recycler_category;
@@ -66,6 +69,8 @@ public class MenuActivity extends AppCompatActivity {
     MyCategoryAdapter adapter;
 
     CartDataSource cartDataSource;
+
+    LayoutAnimationController animationController;
 
 
     @Override
@@ -133,6 +138,8 @@ public class MenuActivity extends AppCompatActivity {
 
     private void initView() {
         ButterKnife.bind(this);
+
+        animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_item_from_left);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +210,7 @@ public class MenuActivity extends AppCompatActivity {
                     .subscribe(menu -> {
                         adapter = new MyCategoryAdapter(this, menu.getResult());
                         recycler_category.setAdapter(adapter);
+                        recycler_category.setLayoutAnimation(animationController);
 
                     }, throwable -> {
                         Toast.makeText(this, "[GET CATEGORY]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();

@@ -14,9 +14,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyCategoryAdapter;
 import com.hermosaprogramacion.premium.androidmyrestaurant.adapter.MyFoodListAdapter;
@@ -43,7 +46,7 @@ import io.reactivex.schedulers.Schedulers;
 public class FoodListActivity extends AppCompatActivity {
 
     @BindView(R.id.img_categoria)
-    ImageView img_categoria;
+    KenBurnsView img_categoria;
 
     @BindView(R.id.recycler_food)
     RecyclerView recycler_food;
@@ -57,6 +60,8 @@ public class FoodListActivity extends AppCompatActivity {
 
     MyFoodListAdapter adapter, searchAdapter;
 
+    LayoutAnimationController animationController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,9 +74,13 @@ public class FoodListActivity extends AppCompatActivity {
     private void initView() {
         ButterKnife.bind(this);
 
+        animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_item_from_left);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_food.setLayoutManager(layoutManager);
         recycler_food.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
+
+
 
     }
 
@@ -122,6 +131,7 @@ public class FoodListActivity extends AppCompatActivity {
                         {
                              adapter = new MyFoodListAdapter(this, food.getResult());
                             recycler_food.setAdapter(adapter);
+                            recycler_food.setLayoutAnimation(animationController);
 
                         }else {
                             Toast.makeText(this, "[GET FOOD RESULT]" + food.getMessage(), Toast.LENGTH_SHORT).show();

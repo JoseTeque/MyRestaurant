@@ -32,6 +32,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,8 @@ public class HomeActivity extends AppCompatActivity
     IMyRestaurantAPI myRestaurantAPI;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     AlertDialog dialog;
+
+    LayoutAnimationController animationController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,8 @@ public class HomeActivity extends AppCompatActivity
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView_restaurant.setLayoutManager(layoutManager);
         recyclerView_restaurant.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
+
+        animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_item_from_left);
     }
 
     private void init() {
@@ -249,6 +255,7 @@ public class HomeActivity extends AppCompatActivity
     private void displayRestaurant(List<RestaurantItem> restaurantList) {
         MyRestaurantAdapter adapter = new MyRestaurantAdapter(this, restaurantList);
         recyclerView_restaurant.setAdapter(adapter);
+        recyclerView_restaurant.setLayoutAnimation(animationController);
     }
 
     private void displayBanner(List<RestaurantItem> restaurantList) {

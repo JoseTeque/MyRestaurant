@@ -6,6 +6,7 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.model.Favorite;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FavoriteOnLyIdModel;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Food;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.MaxOrder;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Menu;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.NearbyRestaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Order;
@@ -65,7 +66,18 @@ public interface IMyRestaurantAPI {
     Observable<FavoriteOnLyIdModel> getFavoriteByRestaurant(@Query("key") String key, @Query("fbid") String fbid, @Query("restaurantId") int restaurantId);
 
     @GET("order")
-    Observable<Order> getOrder(@Query("key") String key, @Query("orderFBID") String orderFBID);
+    Observable<Order> getOrder(@Query("key") String key,
+                               @Query("orderFBID") String orderFBID,
+                               @Query("from") int from,
+                               @Query("to") int to);
+
+    @GET("maxOrder")
+    Observable<MaxOrder> getMaxOrder(@Query("key") String key,
+                                     @Query("orderFBID") String orderFBID);
+
+
+
+
 
     //POST
 
