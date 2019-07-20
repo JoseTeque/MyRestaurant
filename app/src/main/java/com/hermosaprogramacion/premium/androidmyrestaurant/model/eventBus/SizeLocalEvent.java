@@ -6,20 +6,20 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.model.SizeItem;
 import java.util.List;
 
 public class SizeLocalEvent {
-    private boolean succes;
+    private boolean success;
     private List<SizeItem> sizeList;
 
-    public SizeLocalEvent(boolean succes, List<SizeItem> sizeList) {
-        this.succes = succes;
+    public SizeLocalEvent(boolean success, List<SizeItem> sizeList) {
+        this.success = success;
         this.sizeList = sizeList;
     }
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public List<SizeItem> getSizeList() {

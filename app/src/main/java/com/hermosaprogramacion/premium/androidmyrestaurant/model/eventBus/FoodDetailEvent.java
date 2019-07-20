@@ -3,20 +3,20 @@ package com.hermosaprogramacion.premium.androidmyrestaurant.model.eventBus;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.FoodItem;
 
 public class FoodDetailEvent {
-    private boolean succes;
+    private boolean success;
     private FoodItem food;
 
-    public FoodDetailEvent(boolean succes, FoodItem food) {
-        this.succes = succes;
+    public FoodDetailEvent(boolean success, FoodItem food) {
+        this.success = success;
         this.food = food;
     }
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public FoodItem getFood() {

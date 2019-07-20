@@ -9,26 +9,26 @@ public class NearbyRestaurant{
 	@SerializedName("result")
 	private List<NearbyRestaurantItem> result;
 
-	@SerializedName("succes")
-	private boolean succes;
+	@SerializedName("success")
+	private boolean success;
 
 	@SerializedName("message")
 	private String message;
 
-	public void setResult(List<NearbyRestaurantItem> result){
-		this.result = result;
-	}
-
-	public List<NearbyRestaurantItem> getResult(){
+	public List<NearbyRestaurantItem> getResult() {
 		return result;
 	}
 
-	public void setSucces(boolean succes){
-		this.succes = succes;
+	public void setResult(List<NearbyRestaurantItem> result) {
+		this.result = result;
 	}
 
-	public boolean isSucces(){
-		return succes;
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getMessage() {

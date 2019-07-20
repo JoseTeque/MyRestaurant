@@ -35,11 +35,11 @@ public class MyOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private RecyclerView recyclerView;
 
-    ILoadMore iLoadMore;
+    private ILoadMore iLoadMore;
 
-    boolean isloading = false;
+    private   boolean isloading = false;
 
-    int totalItemCount= 0, lastVisibleItem = 0, visibleThresHolds = 10;
+    private  int totalItemCount= 0, lastVisibleItem = 0, visibleThresHolds = 10;
 
     public MyOrderAdapter(Context context, List<OrderItem> orderItemList, RecyclerView recyclerView) {
         this.context = context;
@@ -117,7 +117,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewHolder.txt_order_phone.setText(orderItem.getOrderPhone());
             viewHolder.txt_order_status.setText(Common.converStatusToString(orderItem.getOrderStatus()));
             viewHolder.txt_num_of_item.setText(new StringBuilder("Num of item: ").append(orderItem.getNumOfItem()));
-            viewHolder.txt_order_total_price.setText(new StringBuilder("$").append(orderItem.getTotalPRice()));
+            viewHolder.txt_order_total_price.setText(new StringBuilder("$").append(orderItem.getTotalPrice()));
             viewHolder.txt_order_number.setText(new StringBuilder("Num of orden: ").append(orderItem.getOrderId()));
             viewHolder.txt_order_date.setText(new StringBuilder(simpleDateFormat.format(orderItem.getOrderDate())));
 

@@ -146,7 +146,7 @@ public class NearbyRestaurantActivity extends AppCompatActivity implements OnMap
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(nearbyRestaurant -> {
 
-                    if (nearbyRestaurant.isSucces())
+                    if (nearbyRestaurant.isSuccess())
                     {
                         addMarkerRestaurant(nearbyRestaurant.getResult());
 
@@ -224,7 +224,7 @@ public class NearbyRestaurantActivity extends AppCompatActivity implements OnMap
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(restaurant -> {
-                  if (restaurant.isSucces())
+                  if (restaurant.isSuccess())
                   {
                       Common.currentRestaurant = restaurant.getResult().get(0);
                       EventBus.getDefault().postSticky(new MenuItemEvent(true,Common.currentRestaurant));

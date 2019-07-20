@@ -1,5 +1,6 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +18,11 @@ import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.IMyRestaurantAPI;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.RetrofitClient;
@@ -25,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -66,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+        Paper.init(this);
         dialog = new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
         myRestaurantAPI = RetrofitClient.getInstance(Common.API_RESTAURANT_ENDPOINT).create(IMyRestaurantAPI.class);
     }
@@ -91,25 +100,47 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Account account) {
 
-                        compositeDisposable.add(myRestaurantAPI.getUser(Common.API_KEY, account.getId())
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(userModel -> {
+                        Paper.book().write(Common.REMEMBER_FBID,account.getId());
 
-                                    //if user already in database
-                                    if (userModel.isSucces()) {
-                                      Common.currentUser = userModel.getResult().get(0);
-                                      startActivity(new Intent(MainActivity.this,HomeActivity.class));
-                                      finish();
-                                    } else { //if user not register
-                                        startActivity(new Intent(MainActivity.this,UpdateInformationActivity.class));
-                                        finish();
-                                    }
-                                    dialog.dismiss();
-                                }, throwable -> {
-                                    Toast.makeText(MainActivity.this, "[GET USER]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                                })
-                        );
+                        FirebaseInstanceId.getInstance()
+                                .getInstanceId()
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(MainActivity.this, "[GET TOKEN]" +e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }).addOnCompleteListener(task -> {
+
+                                  compositeDisposable.add(myRestaurantAPI.postToken(Common.API_KEY,
+                                          account.getId(),task.getResult().getToken())
+                                  .subscribeOn(Schedulers.io())
+                                  .observeOn(AndroidSchedulers.mainThread())
+                                  .subscribe(token -> {
+
+                                      if (!token.isSuccess())
+                                          Toast.makeText(MainActivity.this, "[UPDATE TOKEN]" +token.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                      compositeDisposable.add(myRestaurantAPI.getUser(Common.API_KEY, account.getId())
+                                              .subscribeOn(Schedulers.io())
+                                              .observeOn(AndroidSchedulers.mainThread())
+                                              .subscribe(userModel -> {
+
+                                                  //if user already in database
+                                                  if (userModel.isSuccess()) {
+                                                      Common.currentUser = userModel.getResult().get(0);
+                                                      startActivity(new Intent(MainActivity.this,HomeActivity.class));
+                                                      finish();
+                                                  } else { //if user not register
+                                                      startActivity(new Intent(MainActivity.this,UpdateInformationActivity.class));
+                                                      finish();
+                                                  }
+                                                  dialog.dismiss();
+                                              }, throwable -> {
+                                                  Toast.makeText(MainActivity.this, "[GET USER]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                              })
+                                      );
+
+                                  },throwable -> {
+                                      Toast.makeText(MainActivity.this, "[UPDATE TOKEN]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                  }));
+                                });
                     }
 
                     @Override

@@ -9,26 +9,26 @@ public class Addon{
 	@SerializedName("result")
 	private List<AddonItem> result;
 
-	@SerializedName("succes")
-	private boolean succes;
+	@SerializedName("success")
+	private boolean success;
 
 	@SerializedName("message")
 	private String message;
 
-	public void setResult(List<AddonItem> result){
-		this.result = result;
-	}
-
-	public List<AddonItem> getResult(){
+	public List<AddonItem> getResult() {
 		return result;
 	}
 
-	public void setSucces(boolean succes){
-		this.succes = succes;
+	public void setResult(List<AddonItem> result) {
+		this.result = result;
 	}
 
-	public boolean isSucces(){
-		return succes;
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getMessage() {

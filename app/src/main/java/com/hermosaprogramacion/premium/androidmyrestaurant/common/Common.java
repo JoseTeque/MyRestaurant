@@ -17,6 +17,8 @@ public class Common {
     public static final String API_KEY = "1234"; // we will set hard code API key now, but i will show you now to secure it with firebase remote config soon
     public static final int DEFAULT_COLUM_COUNT = 0;
     public static final int FULL_WIDTH_COLUM = 1 ;
+    public static final String REMEMBER_FBID = "REMEMBER_FBID";
+    public static final String APY_KEY_TAG = "APY_KEY";
 
     public static User currentUser;
     public static RestaurantItem currentRestaurant;

@@ -4,25 +4,25 @@ import java.util.List;
 
 public class UserModel {
 
-    private boolean succes;
+    private boolean success;
     private String message;
     private List<User> result;
 
     public UserModel() {
     }
 
-    public UserModel(boolean succes, String message, List<User> result) {
-        this.succes = succes;
+    public UserModel(boolean success, String message, List<User> result) {
+        this.success = success;
         this.message = message;
         this.result = result;
     }
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {

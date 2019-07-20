@@ -79,7 +79,7 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.Vi
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(food -> {
-                        if (food.isSucces()) {
+                        if (food.isSuccess()) {
                             context.startActivity(new Intent(context, FoodDetailActivity.class));
 
                             if (Common.currentRestaurant == null) {
@@ -88,7 +88,7 @@ public class MyFavoriteAdapter extends RecyclerView.Adapter<MyFavoriteAdapter.Vi
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(restaurant -> {
 
-                                            if (restaurant.isSucces()) {
+                                            if (restaurant.isSuccess()) {
                                                 Common.currentRestaurant = restaurant.getResult().get(0);
                                                 EventBus.getDefault().postSticky(new FoodDetailEvent(true, food.getResult().get(0)));
                                             } else {

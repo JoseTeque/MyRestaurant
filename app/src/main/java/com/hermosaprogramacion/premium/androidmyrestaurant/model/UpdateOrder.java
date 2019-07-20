@@ -1,15 +1,15 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant.model;
 
 public class UpdateOrder {
-    private boolean succes;
+    private boolean success;
     private String message;
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {

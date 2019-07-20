@@ -7,20 +7,20 @@ import java.util.List;
 
 public class AddonLoadEvent {
 
-    private boolean succes;
+    private boolean success;
     private List<AddonItem> addonList;
 
-    public AddonLoadEvent(boolean succes, List<AddonItem> addonList) {
-        this.succes = succes;
+    public AddonLoadEvent(boolean success, List<AddonItem> addonList) {
+        this.success = success;
         this.addonList = addonList;
     }
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public List<AddonItem> getAddonList() {

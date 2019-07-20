@@ -114,7 +114,7 @@ public class FoodListActivity extends AppCompatActivity {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void loadFoodByMenu(FoodListEvent event) {
         dialog.show();
-        if (event.isSucces()) {
+        if (event.isSuccess()) {
             Picasso.get().load(event.getMenuItem().getImage()).into(img_categoria);
             toolbar.setTitle(event.getMenuItem().getName());
 
@@ -127,7 +127,7 @@ public class FoodListActivity extends AppCompatActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(food -> {
 
-                        if (food.isSucces())
+                        if (food.isSuccess())
                         {
                              adapter = new MyFoodListAdapter(this, food.getResult());
                             recycler_food.setAdapter(adapter);
@@ -213,7 +213,7 @@ public class FoodListActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(food -> {
 
-                    if (food.isSucces())
+                    if (food.isSuccess())
                     {
                       searchAdapter = new MyFoodListAdapter(this, food.getResult() );
                       recycler_food.setAdapter(searchAdapter);

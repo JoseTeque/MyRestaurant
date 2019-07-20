@@ -9,26 +9,26 @@ public class Size{
 	@SerializedName("result")
 	private List<SizeItem> result;
 
-	@SerializedName("succes")
-	private boolean succes;
+	@SerializedName("success")
+	private boolean success;
 
 	@SerializedName("message")
 	private String message;
 
-	public void setResult(List<SizeItem> result){
-		this.result = result;
-	}
-
-	public List<SizeItem> getResult(){
+	public List<SizeItem> getResult() {
 		return result;
 	}
 
-	public void setSucces(boolean succes){
-		this.succes = succes;
+	public void setResult(List<SizeItem> result) {
+		this.result = result;
 	}
 
-	public boolean isSucces(){
-		return succes;
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public String getMessage() {

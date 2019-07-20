@@ -88,7 +88,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(updateUserModel -> {
 
-                            if (updateUserModel.isSucces())
+                            if (updateUserModel.isSuccess())
                             {
                               //if user has been update, just refresh again
                                 compositeDisposable.add(myRestaurantAPI.getUser(Common.API_KEY, account.getId())
@@ -96,7 +96,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(userModel -> {
 
-                                            if (userModel.isSucces())
+                                            if (userModel.isSuccess())
                                             {
                                                 Common.currentUser = userModel.getResult().get(0);
                                                 startActivity(new Intent(UpdateInformationActivity.this, HomeActivity.class));

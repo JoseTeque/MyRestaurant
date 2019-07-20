@@ -4,10 +4,10 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 
-public class CreateOrder{
+public class Token{
 
 	@SerializedName("result")
-	private List<CreateOrderItem> result;
+	private List<TokenItem> result;
 
 	@SerializedName("success")
 	private boolean success;
@@ -15,20 +15,20 @@ public class CreateOrder{
 	@SerializedName("message")
 	private String message;
 
-	public List<CreateOrderItem> getResult() {
-		return result;
-	}
-
-	public void setResult(List<CreateOrderItem> result) {
+	public void setResult(List<TokenItem> result){
 		this.result = result;
 	}
 
-	public boolean isSuccess() {
-		return success;
+	public List<TokenItem> getResult(){
+		return result;
 	}
 
-	public void setSuccess(boolean success) {
+	public void setSuccess(boolean success){
 		this.success = success;
+	}
+
+	public boolean isSuccess(){
+		return success;
 	}
 
 	public String getMessage() {

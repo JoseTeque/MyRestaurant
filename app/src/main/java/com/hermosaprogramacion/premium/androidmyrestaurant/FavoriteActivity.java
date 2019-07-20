@@ -58,7 +58,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(favorite -> {
-                    if (favorite.isSucces()) {
+                    if (favorite.isSuccess()) {
                         adapter = new MyFavoriteAdapter(this, favorite.getResult());
                         recycler_food_favorite.setAdapter(adapter);
                     } else {

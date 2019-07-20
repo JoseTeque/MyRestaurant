@@ -93,17 +93,17 @@ public class MenuActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(favoriteOnLyIdModel -> {
-                    if (favoriteOnLyIdModel.isSucces()) {
+                    if (favoriteOnLyIdModel.isSuccess()) {
                         if (favoriteOnLyIdModel.getResult() != null && favoriteOnLyIdModel.getResult().size() > 0) {
                             Common.currentFavOfRestaurant = favoriteOnLyIdModel.getResult();
                         } else {
                             Common.currentFavOfRestaurant = new ArrayList<>();
                         }
                     } else {
-                        Toast.makeText(this, "[GET FAVORITE Result]" + favoriteOnLyIdModel.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "[GET FAVORITE Result]" + favoriteOnLyIdModel.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }, throwable -> {
-                    Toast.makeText(this, "[GET FAVORITE]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this, "[GET FAVORITE]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 })
         );
     }
@@ -194,7 +194,7 @@ public class MenuActivity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void loadMenuByRestaurant(MenuItemEvent event) {
-        if (event.isSucces()) {
+        if (event.isSuccess()) {
             Picasso.get().load(event.getRestaurantItem().getImage()).into(img_restaurante);
             toolbar.setTitle(event.getRestaurantItem().getName());
             setSupportActionBar(toolbar);

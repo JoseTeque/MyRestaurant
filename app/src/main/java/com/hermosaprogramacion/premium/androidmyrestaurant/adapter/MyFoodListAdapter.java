@@ -111,7 +111,7 @@ public class MyFoodListAdapter extends RecyclerView.Adapter<MyFoodListAdapter.Vi
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(favorite -> {
 
-                            if (favorite.isSucces())
+                            if (favorite.isSuccess())
                             {
                                 fav.setImageResource(R.drawable.ic_favorite_border_primary_color_24dp);
                                 fav.setTag(false);
@@ -144,7 +144,7 @@ public class MyFoodListAdapter extends RecyclerView.Adapter<MyFoodListAdapter.Vi
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(postFavorite -> {
 
-                            if (postFavorite.isSucces() && postFavorite.getResult().contains("Success"))
+                            if (postFavorite.isSuccess() && postFavorite.getResult().contains("Success"))
                             {
                                 fav.setImageResource(R.drawable.ic_favorite_primary_color_24dp);
                                 fav.setTag(true);

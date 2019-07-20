@@ -6,26 +6,26 @@ import java.util.List;
 
 public class RestaurantLoadEvent {
 
-    private boolean succes;
+    private boolean success;
     private List<RestaurantItem> restaurantList;
     private String message;
 
-    public RestaurantLoadEvent(boolean succes, List<RestaurantItem> restaurantList) {
-        this.succes = succes;
+    public RestaurantLoadEvent(boolean success, List<RestaurantItem> restaurantList) {
+        this.success = success;
         this.restaurantList = restaurantList;
     }
 
-    public RestaurantLoadEvent(boolean succes, String message) {
-        this.succes = succes;
+    public RestaurantLoadEvent(boolean success, String message) {
+        this.success = success;
         this.message = message;
     }
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public List<RestaurantItem> getRestaurantList() {

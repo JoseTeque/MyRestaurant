@@ -6,21 +6,20 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.model.MenuItem;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.RestaurantItem;
 
 public class FoodListEvent {
-    private boolean succes;
+    private boolean success;
     private MenuItem menuItem;
 
-
-    public FoodListEvent(boolean succes, MenuItem menuItem) {
-        this.succes = succes;
+    public FoodListEvent(boolean success, MenuItem menuItem) {
+        this.success = success;
         this.menuItem = menuItem;
     }
 
-    public boolean isSucces() {
-        return succes;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setSucces(boolean succes) {
-        this.succes = succes;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public MenuItem getMenuItem() {
@@ -30,5 +29,4 @@ public class FoodListEvent {
     public void setMenuItem(MenuItem menuItem) {
         this.menuItem = menuItem;
     }
-
 }

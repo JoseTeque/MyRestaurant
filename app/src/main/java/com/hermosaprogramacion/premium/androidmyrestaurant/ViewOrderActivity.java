@@ -69,7 +69,7 @@ public class ViewOrderActivity extends AppCompatActivity implements ILoadMore {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(maxOrder -> {
 
-                    if (maxOrder.isSucces())
+                    if (maxOrder.isSuccess())
                     {
                        maxData = maxOrder.getResult().get(0).getMaxRowNum();
                         dialog.dismiss();
@@ -96,7 +96,7 @@ public class ViewOrderActivity extends AppCompatActivity implements ILoadMore {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(order -> {
 
-                if (order.isSucces())
+                if (order.isSuccess())
                 {
                     if (order.getResult().size() > 0)
                     {

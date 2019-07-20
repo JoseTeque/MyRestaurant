@@ -9,22 +9,22 @@ public class PostFavorite{
 	@SerializedName("result")
 	private String result;
 
-	@SerializedName("succes")
-	private boolean succes;
+	@SerializedName("success")
+	private boolean success;
 
-	public void setResult(String result){
-		this.result = result;
-	}
-
-	public String getResult(){
+	public String getResult() {
 		return result;
 	}
 
-	public void setSucces(boolean succes){
-		this.succes = succes;
+	public void setResult(String result) {
+		this.result = result;
 	}
 
-	public boolean isSucces(){
-		return succes;
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 }

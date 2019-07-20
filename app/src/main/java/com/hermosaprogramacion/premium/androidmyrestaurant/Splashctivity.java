@@ -1,5 +1,6 @@
 package com.hermosaprogramacion.premium.androidmyrestaurant;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
@@ -19,6 +20,11 @@ import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitCallback;
 import com.facebook.accountkit.AccountKitError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.hermosaprogramacion.premium.androidmyrestaurant.common.Common;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.IMyRestaurantAPI;
 import com.hermosaprogramacion.premium.androidmyrestaurant.retrofit.RetrofitClient;
@@ -36,6 +42,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -65,42 +72,68 @@ public class Splashctivity extends AppCompatActivity {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
 
-                        AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
-                            @Override
-                            public void onSuccess(Account account) {
+                       //get token
 
-                                dialog.show();
+                        FirebaseInstanceId.getInstance()
+                                .getInstanceId()
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(Splashctivity.this, "[GET TOKEN]" +e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }).addOnCompleteListener(task -> {
+                                    if (task.isSuccessful())
+                                    {
+                                        AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+                                            @Override
+                                            public void onSuccess(Account account) {
 
-                                compositeDisposable.add(myRestaurantAPI.getUser(Common.API_KEY, account.getId())
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(userModel -> {
+                                                dialog.show();
 
-                                                    if (userModel.isSucces()) //if user available in database
-                                                    {
-                                                        Common.currentUser = userModel.getResult().get(0);
-                                                        startActivity(new Intent(Splashctivity.this, HomeActivity.class));
-                                                        finish();
-                                                    } else {  //if not available user in database, star UpdateInformationActivity for register
-                                                        startActivity(new Intent(Splashctivity.this, UpdateInformationActivity.class));
-                                                        finish();
-                                                    }
+                                                Paper.book().write(Common.REMEMBER_FBID,account.getId());
 
-                                                    dialog.dismiss();
-                                                },
-                                                throwable -> {
-                                                    dialog.dismiss();
-                                                    Toast.makeText(Splashctivity.this, "[GET USER API]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                                compositeDisposable.add(myRestaurantAPI.postToken(Common.API_KEY,account.getId(),
+                                                        task.getResult().getToken())
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(token -> {
+
+                                                    if (!token.isSuccess())
+                                                        Toast.makeText(Splashctivity.this, "[UPDATE TOKEN ERROR]" +token.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                   compositeDisposable.add(myRestaurantAPI.getUser(Common.API_KEY, account.getId())
+                                                          .subscribeOn(Schedulers.io())
+                                                          .observeOn(AndroidSchedulers.mainThread())
+                                                          .subscribe(userModel -> {
+
+                                                                      if (userModel.isSuccess()) //if user available in database
+                                                                      {
+                                                                          Common.currentUser = userModel.getResult().get(0);
+                                                                          startActivity(new Intent(Splashctivity.this, HomeActivity.class));
+                                                                          finish();
+                                                                      } else {  //if not available user in database, star UpdateInformationActivity for register
+                                                                          startActivity(new Intent(Splashctivity.this, UpdateInformationActivity.class));
+                                                                          finish();
+                                                                      }
+
+                                                                      dialog.dismiss();
+                                                                  },
+                                                                  throwable -> {
+                                                                      dialog.dismiss();
+                                                                      Toast.makeText(Splashctivity.this, "[GET USER API]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                  }));
+
+                                                },throwable -> {
+                                                    Toast.makeText(Splashctivity.this, "[UPDATE TOKEN]" +throwable.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }));
-                            }
+                                            }
 
-                            @Override
-                            public void onError(AccountKitError accountKitError) {
-                                Toast.makeText(Splashctivity.this, "Not sign in ! please sign in", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(Splashctivity.this, MainActivity.class));
-                                finish();
-                            }
-                        });
+                                            @Override
+                                            public void onError(AccountKitError accountKitError) {
+                                                Toast.makeText(Splashctivity.this, "Not sign in ! please sign in", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(Splashctivity.this, MainActivity.class));
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                });
                     }
 
                     @Override
@@ -126,6 +159,7 @@ public class Splashctivity extends AppCompatActivity {
     }
 
     private void init() {
+        Paper.init(this);
         dialog = new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
         myRestaurantAPI = RetrofitClient.getInstance(Common.API_RESTAURANT_ENDPOINT).create(IMyRestaurantAPI.class);
     }

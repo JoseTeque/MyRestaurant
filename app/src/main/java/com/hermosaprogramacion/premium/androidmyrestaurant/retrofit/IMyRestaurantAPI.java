@@ -13,6 +13,7 @@ import com.hermosaprogramacion.premium.androidmyrestaurant.model.Order;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.PostFavorite;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Restaurant;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.Size;
+import com.hermosaprogramacion.premium.androidmyrestaurant.model.Token;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UpdateOrder;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UpdateUserModel;
 import com.hermosaprogramacion.premium.androidmyrestaurant.model.UserModel;
@@ -26,6 +27,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface IMyRestaurantAPI {
+
+    @GET("token")
+    Observable<Token> getToken(@Query("key") String key,
+                               @Query("fbid") String fbid);
 
     @GET("user")
     Observable<UserModel> getUser(@Query("key") String key,
@@ -80,6 +85,12 @@ public interface IMyRestaurantAPI {
 
 
     //POST
+
+    @POST("token")
+    @FormUrlEncoded
+    Observable<Token> postToken(@Field("key") String key,
+                                @Field("fbid") String fbid,
+                                @Field("token") String token);
 
     @POST("user")
     @FormUrlEncoded

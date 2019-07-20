@@ -170,7 +170,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void displayFoodDetail(FoodDetailEvent event) {
-        if (event.isSucces()) {
+        if (event.isSuccess()) {
 
             toolbar.setTitle(event.getFood().getName());
 
@@ -204,7 +204,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(addon -> {
 
-                                        if (addon.isSucces()) {
+                                        if (addon.isSuccess()) {
                                             EventBus.getDefault().post(new AddonLoadEvent(true, addon.getResult()));
                                         } else {
                                             Toast.makeText(this, "[LOAD ADDON RESULT]" + addon.getMessage(), Toast.LENGTH_SHORT).show();
@@ -229,7 +229,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(size -> {
-                                if (size.isSucces()) {
+                                if (size.isSuccess()) {
                                     //send local event bus
                                     EventBus.getDefault().post(new SizeLocalEvent(true, size.getResult()));
 
@@ -254,7 +254,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(addon -> {
 
-                                if (addon.isSucces()) {
+                                if (addon.isSuccess()) {
                                     EventBus.getDefault().post(new AddonLoadEvent(true, addon.getResult()));
                                 } else {
                                     Toast.makeText(this, "[LOAD ADDON RESULT]" + addon.getMessage(), Toast.LENGTH_SHORT).show();
@@ -273,7 +273,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void displaySize(SizeLocalEvent event) {
-        if (event.isSucces()) {
+        if (event.isSuccess()) {
             //create radio button base on size length
             for (SizeItem sizeItem : event.getSizeList()) {
 
@@ -313,7 +313,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void displayAddon(AddonLoadEvent event) {
-        if (event.isSucces()) {
+        if (event.isSuccess()) {
             recycler_Addon.setHasFixedSize(true);
             recycler_Addon.setLayoutManager(new LinearLayoutManager(this));
             recycler_Addon.setAdapter(new MyAddonAdapter(this, event.getAddonList()));

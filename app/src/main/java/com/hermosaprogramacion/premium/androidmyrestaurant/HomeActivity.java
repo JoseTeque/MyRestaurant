@@ -240,7 +240,7 @@ public class HomeActivity extends AppCompatActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void proccesRestaurantLoadEvent(RestaurantLoadEvent event)
     {
-        if (event.isSucces())
+        if (event.isSuccess())
         {
           displayBanner(event.getRestaurantList());
           displayRestaurant(event.getRestaurantList());

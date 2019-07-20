@@ -11,8 +11,8 @@ public class OrderItem {
 	@SerializedName("orderAddress")
 	private String orderAddress;
 
-	@SerializedName("totalPRice")
-	private Double totalPRice;
+	@SerializedName("totalPrice")
+	private Double totalPrice;
 
 	@SerializedName("orderId")
 	private int orderId;
@@ -52,12 +52,12 @@ public class OrderItem {
 		return orderAddress;
 	}
 
-	public void setTotalPRice(Double totalPRice){
-		this.totalPRice = totalPRice;
+	public Double getTotalPrice() {
+		return totalPrice;
 	}
 
-	public Double getTotalPRice(){
-		return totalPRice;
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 
 	public void setOrderId(int orderId){

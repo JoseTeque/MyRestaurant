@@ -232,7 +232,7 @@ public class PlaceOlderActivity extends AppCompatActivity implements DatePickerD
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(createOrder -> {
 
-                                            if (createOrder.isSucces()) {
+                                            if (createOrder.isSuccess()) {
                                                 // after have order number, we will update all item of this order to orderDetail
                                                 // first, select cart items
                                                 compositeDisposable.add(myRestaurantAPI.updateOrder(Common.API_KEY, String.valueOf(createOrder.getResult().get(0).getOrderNumber()),
@@ -241,7 +241,7 @@ public class PlaceOlderActivity extends AppCompatActivity implements DatePickerD
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(updateOrder -> {
 
-                                                            if (updateOrder.isSucces()) {
+                                                            if (updateOrder.isSuccess()) {
                                                                 //after update item, we will clear cart and show message success
                                                                 cartDataSource.cleanCart(Common.currentUser.getFbid(), Common.currentRestaurant.getId())
                                                                         .subscribeOn(Schedulers.io())
@@ -309,7 +309,7 @@ public class PlaceOlderActivity extends AppCompatActivity implements DatePickerD
 
                     }, throwable -> {
                         dialog.dismiss();
-                        Toast.makeText(this, "[GET TOKEN]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "[ GET TOKEN ]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }));
         }
     }
@@ -428,7 +428,7 @@ public class PlaceOlderActivity extends AppCompatActivity implements DatePickerD
                                                                 .observeOn(AndroidSchedulers.mainThread())
                                                                 .subscribe(createOrder -> {
 
-                                                                    if (createOrder.isSucces()) {
+                                                                    if (createOrder.isSuccess()) {
                                                                         // after have order number, we will update all item of this order to orderDetail
                                                                         // first, select cart items
                                                                         compositeDisposable.add(myRestaurantAPI.updateOrder(Common.API_KEY, String.valueOf(createOrder.getResult().get(0).getOrderNumber()),
@@ -437,7 +437,7 @@ public class PlaceOlderActivity extends AppCompatActivity implements DatePickerD
                                                                                 .observeOn(AndroidSchedulers.mainThread())
                                                                                 .subscribe(updateOrder -> {
 
-                                                                                    if (updateOrder.isSucces()) {
+                                                                                    if (updateOrder.isSuccess()) {
                                                                                         //after update item, we will clear cart and show message success
                                                                                         cartDataSource.cleanCart(Common.currentUser.getFbid(), Common.currentRestaurant.getId())
                                                                                                 .subscribeOn(Schedulers.io())
