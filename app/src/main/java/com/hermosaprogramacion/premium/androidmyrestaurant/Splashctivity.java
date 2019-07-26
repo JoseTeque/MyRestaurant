@@ -40,6 +40,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
@@ -90,7 +91,7 @@ public class Splashctivity extends AppCompatActivity {
                                                 Paper.book().write(Common.REMEMBER_FBID,account.getId());
 
                                                 compositeDisposable.add(myRestaurantAPI.postToken(Common.API_KEY,account.getId(),
-                                                        task.getResult().getToken())
+                                                        Objects.requireNonNull(task.getResult()).getToken())
                                                 .subscribeOn(Schedulers.io())
                                                 .observeOn(AndroidSchedulers.mainThread())
                                                 .subscribe(token -> {

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class CreateOrderItem {
 
-	@SerializedName("OrderNumber")
+	@SerializedName("orderNumber")
 	private int orderNumber;
 
 	public void setOrderNumber(int orderNumber){

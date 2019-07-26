@@ -125,4 +125,12 @@ public class Common {
         notificationManager.notify(notiId,mNotification);
 
     }
+
+    public static String getTopicChannel(int id) {
+        return new StringBuilder("Restaurant_").append(id).toString();
+    }
+
+    public static String createTopicSender(String topicChannel) {
+        return new StringBuilder("/topics/").append(topicChannel).toString();
+    }
 }
